@@ -1,0 +1,150 @@
+:nnoremap V <C-v>
+:nn V <C-v>
+
+date +%Y%m%d%H%M%S
+date '+%Y/%m/%d %H:%M:%S'
+
+export PS1='\[\e[32;1m\]\u \w \[\e[31;1m\]>_\[\e[36;1m\]'
+alias log='less -n +F /var/log/xx.log'
+alias l='ls -alh --color=auto --time-style "+%Y/%m/%d %H:%M:%S"'
+alias ls='ls -lh --color=auto --time-style "+%Y/%m/%d %H:%M:%S"'
+
+
+----------
+worker_rlimit_nofile 65535;
+server_tokens off;
+
+gzip on;
+gzip_min_length 4k;
+gzip_comp_level 2;
+gzip_types text/plain application/javascript text/css;
+
+access_log off; 
+error_log /dev/null;
+
+client_body_buffer_size 256k;
+client_body_temp_path /dev/shm/temp;
+#client_body_temp_path /run/temp 3 2;
+proxy_temp_path /dev/shm/proxy_temp;
+----------
+
+
+ssh -vNC -L 6666:localhost:3306 x@xxx.xxx
+
+ssh -vNR 8081:localhost:80 dev
+ssh -4NfD 1080 dev
+ssh -4NfL 8181:localhost:81 dev
+ssh -4NfL 8088:localhost:808 dev
+ssh -4NfL 3366:localhost:3306 dev
+ssh -4NfL 6666:localhost:3306 server
+-DsocksProxyHost=127.0.0.1 -DsocksProxyPort=1080
+
+nohup tunnel > /dev/null 2>&1 &
+
+w !sudo tee %
+
+mysqldump -uroot -p --lock-all-tables xxx > xxx.sql.bak
+
+iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+
+System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
+System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "/dev/shm/cglib/");
+
+CATALINA_OPTS="-Xms1024m -Xmx1024m -XX:MetaspaceSize=520m -XX:MaxMetaspaceSize=520m -XX:PermSize=520m -XX:MaxPermSize=520m -Djava.security.egd=file:/dev/./urandom -XX:-UseBiasedLocking -XX:-TieredCompilation -XX:+AlwaysPreTouch"
+
+adb shell cmd appops set package RUN_IN_BACKGROUND ignore
+adb shell pm uninstall -k --user 0 package
+adb shell pm disable-user --user 0 package
+
+logcat -v time | grep 
+
+jarsigner -verbose -certs -keystore sxyx_keystore.jks -storepass xxx -keypass xxx -digestalg SHA1 -sigalg SHA1withRSA -sigfile CERT %1 sxyx
+
+chrome --proxy-server=socks5://127.0.0.1:1080
+
+svn st | grep -F ? | awk '{print $2}' | xargs rm
+
+find ./ -mtime +3 -name "*.log" | xargs rm -f
+find / -perm +4000
+
+rsync -ahP -f '- .svn/' -f '- .idea/' -f 'P api/' --delete ~/.jenkins/workspace/AutoDeploy/ /www/
+
+netsh winsock reset
+netsh int ip reset
+ipconfig /release
+ipconfig /renew
+ipconfig /flushdns
+
+
+xmodmap -e 'clear lock'
+xmodmap -e  'keycode 66 = Return'
+xmodmap -e  'keycode 49 = BackSpace'
+
+
+sysctl -w net.ipv4.tcp_tw_reuse=1
+sysctl -w net.ipv4.tcp_tw_recycle=1
+sysctl -w net.ipv4.tcp_fin_timeout=30
+sysctl -w net.ipv4.tcp_keepalive_time=1200
+sysctl -w net.ipv4.tcp_max_syn_backlog=5120
+sysctl -w net.ipv4.tcp_max_tw_buckets=6000
+
+
+<resources>
+    <resource>
+        <directory>src/main/java</directory>
+        <includes>
+            <include>**/*.properties</include>
+            <include>**/*.xml</include>
+        </includes>
+        <filtering>true</filtering>
+    </resource>
+    
+    <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+            <include>**/*.properties</include>
+            <include>**/*.xml</include>
+        </includes>
+        <filtering>true</filtering>
+    </resource>
+</resources>
+
+[\u4e00-\u9fa5]
+
+/home/x/mysql-5.5.58/bin/mysqld --defaults-file=/home/x/.my.cnf --basedir=/home/x/mysql-5.5.58 --datadir=/home/x/mysql-5.5.58/data --plugin-dir=/home/x/mysql-5.5.58/lib/plugin --pid-file=X.pid --socket=/tmp/mysql.sock --port=3306 --console
+
+/home/x/mariadb-5.5.6/bin/mysqld --basedir=/home/x/mariadb-5.5.6 --datadir=/home/x/mariadb-5.5.6/data --plugin-dir=/home/x/mariadb-5.5.6/lib/plugin --pid-file=X.pid --socket=/tmp/mysql.sock --port=3306 --console
+
+
+--with-cc-opt='-g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2' --with-ld-opt='-Wl,-Bsymbolic-functions -fPIE -pie -Wl,-z,relro -Wl,-z,now' --prefix=/usr/share/nginx --conf-path=/etc/nginx/nginx.conf --http-log-path=/var/log/nginx/access.log --error-log-path=/var/log/nginx/error.log --lock-path=/var/lock/nginx.lock --pid-path=/run/nginx.pid --http-client-body-temp-path=/var/lib/nginx/body --http-fastcgi-temp-path=/var/lib/nginx/fastcgi --http-proxy-temp-path=/var/lib/nginx/proxy --http-scgi-temp-path=/var/lib/nginx/scgi --http-uwsgi-temp-path=/var/lib/nginx/uwsgi --with-debug --with-pcre-jit --with-ipv6 --with-http_ssl_module --with-http_stub_status_module --with-http_realip_module --with-http_auth_request_module --with-http_addition_module --with-http_dav_module --with-http_geoip_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_image_filter_module --with-http_v2_module --with-http_sub_module --with-http_xslt_module --with-stream --with-stream_ssl_module --with-mail --with-mail_ssl_module --with-threads
+
+
+SELECT CONCAT('ALTER TABLE', TABLE_NAME,'CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;') AS mySQL FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA= "beetbox" AND TABLE_TYPE="BASE TABLE"
+
+
+https://www.jianguoyun.com/
+1062@qq.com poiuytrewq
++13068001861
+
+
+curl -i -X POST -H "Content-type: application/x-www-form-urlencoded;charset: utf-8;Accept: text/plain" -d 'json' url
+
+for %%i in (*.apk) do (echo. & echo %%i & aapt d --include-meta-data badging %%~fi | findstr "package meta-data")
+
+ls *.apk | % {echo $_.name; (keytool -printcert -jarfile $_)[9]}
+
+----------
+cat .git/config  # note <github-uri>
+rm -rf .git
+
+git init
+git add .
+git commit -m "clean commit"
+
+git remote add origin <github-uri>
+git push -u --force origin master
+----------
+
+docker run -d --name mysql-master -p 127.0.0.1:3300:3306 -v /data/mysql/master:/etc/mysql -e MYSQL_ROOT_PASSWORD=654321 mysql --secure-file-priv=null
+
+docker run -d --name redis-master -p 127.0.0.1:6379:6379 -v /data/redis/master:/data redis redis-server /data/redis.conf

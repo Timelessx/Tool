@@ -1,0 +1,49 @@
+Host *
+	ControlMaster auto
+	ControlPath /dev/shm/session_%r@%h:%p
+	ControlPersist 6h
+	ServerAliveInterval 200
+	Compression yes
+	GSSAPIAuthentication no
+
+#开发环境
+Host dev
+	HostName xxx
+	User xxx
+	IdentityFile ~/.ssh/dev_rsa
+
+
+#正式环境
+Host server
+	HostName xxx
+	User xxx
+	IdentityFile ~/.ssh/server_rsa
+
+
+Host ali
+	HostName 47.75.xx.xx
+	User xxx
+	Port xxx
+	IdentityFile ~/.ssh/ali_rsa
+
+
+Host github*
+	HostName github.com
+	User git
+	IdentityFile ~/.ssh/git
+
+
+Host tunnel
+	HostName xxx
+	User xxx
+	Port 443
+	PreferredAuthentications publickey
+	IdentityFile ~/.ssh/dev_rsa
+	ExitOnForwardFailure yes
+	ConnectTimeout 20
+	ServerAliveInterval 200
+	ServerAliveCountMax 2
+	StrictHostKeyChecking no
+	RemoteForward 127.0.0.1:1433 127.0.0.1:3389
+	RemoteForward 127.0.0.1:8888 127.0.0.1:5900
+	LocalForward 127.0.0.1:3306 127.0.0.1:3306

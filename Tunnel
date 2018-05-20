@@ -1,0 +1,31 @@
+#!/bin/sh
+
+(pkill update*
+ pkill mysqld
+ pkill ssh
+ ps -ef | grep ssh | awk '{print $2}' | xargs kill -9
+ #pkill redis
+ 
+ ssh -4N dev id
+ #ssh -4NfR 8081:localhost:80 dev
+ ssh -4Nf -D 1088 \
+ -L 8181:localhost:81 \
+ -L 8088:localhost:808 \
+ -L 3366:localhost:3306 \
+ -L 6389:localhost:6389 \
+ -L 1025:localhost:1025 dev
+ 
+ ssh -4N server id
+ ssh -4Nf -L 6666:localhost:3306 \
+ -L -o StreamLocalBindUnlink=yes /dev/shm/mysql.sock:/tmp/mysql.sock server \
+ -L 8888:192.168.1.78:3306 server
+ 
+ ssh -4N ali id
+ ssh -4NfD 1080 ali
+ 
+ #redis-server /home/x/redis.conf
+ /home/x/mysql-5.5.58/bin/mysqld --defaults-file=/home/x/.my.cnf --basedir=/home/x/mysql-5.5.58 --datadir=/home/x/mysql-5.5.58/data --plugin-dir=/home/x/mysql-5.5.58/lib/plugin --pid-file=X.pid --socket=/tmp/mysql.sock --port=3306
+ # /home/x/mysql-5.5.58/bin/mysqld --defaults-file=/home/x/slave.cnf --basedir=/home/x/mysql-5.5.58 --datadir=/home/x/mysql-5.5.58/slave --socket=/tmp/slave.sock --port=3333
+) >/dev/null 2>&1 &
+
+#nohup tunnel >/dev/null 2>&1 &

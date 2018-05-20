@@ -1,0 +1,21 @@
+Windows Registry Editor Version 5.00
+
+;    00,00,00,00  -- header version (always 00000000)
+;    00,00,00,00  -- header flags (always 00000000)
+;    02,00,00,00  -- number of entries (including terminating NULL,begin from 1)
+;    0E,00,3a,00  -- map entry: desired scancode, key to remap ('CapsLock' -> 'BKSP')
+;    00,00,00,00  -- NULL terminator (always 00000000)
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout]
+"Scancode Map"=hex:00,00,00,00,00,00,00,00,03,00,00,00,0E,00,3a,00,3a,00,46,00,00,00,00,00
+;                 | DWORD 1   | DWORD 2   | 2 Maps    | Map 1     | Map 2     | end
+;                                         +-----------+-----------+-----------+-------------
+;                                         |           |           |           | Final 4 bytes
+;                                         |  2 map +  |           | Map 2: ScrlLK to CapsLock
+;                                         | 1 end = 3 | Map 1: CapsLock to BKSP
+;                                         |
+;  01 ESC
+;  0E BKSP
+;  0F Tab
+;  1C Enter
+;  3A CapsLock

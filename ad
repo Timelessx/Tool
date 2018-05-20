@@ -1,0 +1,61 @@
+#!/bin/bash
+
+#set -e
+
+RED='\E[1;31m'
+GREEN='\E[1;32m'
+PINK='\E[1;35m'
+ESC='\E[0m'
+
+JAVA_HOME=/root/jdk1.8
+
+MAVEN_HOME=/usr/local/lib/maven
+mvn=$MAVEN_HOME/bin/mvn
+
+port=8080
+pid=/root/.pid.lock
+jar=/root/app.jar
+log=/root/log.out
+
+dir=/root/app
+
+function success(){
+    echo -e "${RED}`ls $dir/api/target/*.jar`${ESC}"
+
+    if [ -f "$pid" ]; then
+      id=`cat "$pid" | awk '{print $1}'`
+      id=`ps -aef | grep $id | awk '{print $2}' | grep $id`
+
+      if [ $id ]; then
+          echo -e "App is running with pid ${RED}$id${ESC} now kill it!"
+          #kill -9 $id
+          a=`kill $id`
+      fi
+    fi
+
+    mv -bf $dir/api/target/*.jar $jar
+    nohup $JAVA_HOME/bin/java -server -Xms2g -Xmx2g -XX:MetaspaceSize=520m -XX:MaxMetaspaceSize=520m -XX:-UseBiasedLocking -XX:+AlwaysPreTouch -jar "$jar" --spring.profiles.active=prod >> "$log" 2>&1 &
+    echo $! > $pid
+    echo -e "${RED}start app with pid ${GREEN}$!${ESC}"
+}
+
+cd $dir
+echo -e "${GREEN}----------pwd: $(pwd)----------${ESC}"
+git pull
+
+while read -r line; do
+  echo -e "${PINK}$line${ESC}"
+
+  if [[ $line == *"BUILD SUCCESS"* ]]; then
+    pass=1
+#   echo -e "${PINK}build success${ESC}"
+#   break
+  fi
+done < <($mvn -Dmaven.test.skip=true package)
+
+if [ "$pass" -eq 1 ] ; then
+    echo -e "${GREEN}>>>>>>>>>>打包成功>>>>>>>>>>${ESC}"
+    success
+else
+    echo -e "${RED}##########打包失败##########${ESC}"
+fi
