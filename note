@@ -148,3 +148,25 @@ git push -u --force origin master
 docker run -d --name mysql-master -p 127.0.0.1:3300:3306 -v /data/mysql/master:/etc/mysql -e MYSQL_ROOT_PASSWORD=654321 mysql --secure-file-priv=null
 
 docker run -d --name redis-master -p 127.0.0.1:6379:6379 -v /data/redis/master:/data redis redis-server /data/redis.conf
+
+chrome --incognito --disable-blink-features=AutomationControlled --headless --remote-debugging-port=8000 --user-data-dir=/run/chrome
+
+https://stackoverflow.com/questions/53039551/selenium-webdriver-modifying-navigator-webdriver-flag-to-prevent-selenium-detec
+
+--disable-blink-features=AutomationControlled
+
+driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+  "source": """
+    Object.defineProperty(navigator, 'webdriver', {
+      get: () => undefined
+    })
+  """
+})
+
+Object.defineProperty(navigator, 'webdriver', ()=>{})
+
+delete navigator.__proto__.webdriver
+
+const nav_proto = navigator.__proto__;
+delete nav_proto.webdriver;
+navigator.__proto__ = nav_proto;
