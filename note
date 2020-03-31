@@ -170,3 +170,7 @@ delete navigator.__proto__.webdriver
 const nav_proto = navigator.__proto__;
 delete nav_proto.webdriver;
 navigator.__proto__ = nav_proto;
+
+
+http://127.0.0.1:8888/devtools/inspector.html?ws=127.0.0.1:8888/devtools/page/xx
+devtools://devtools/bundled/inspector.html?ws=127.0.0.1:8888/devtools/page/xx
